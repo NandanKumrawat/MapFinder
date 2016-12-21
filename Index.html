@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" id='ng-app' ng-app="search-box-example">
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,800,600,300,700'
+          rel='stylesheet' type='text/css'>
+    <link href="search-box.css" rel="stylesheet" type="text/css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title>Places search box</title>
+    <style>
+        tbody {
+             overflow: auto;
+            display: block;
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body ng-controller="SearchBoxController">
+
+    <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+    <div class="row">
+        <div class="col-xs-12 col-md-8">
+            <div id="searchBoxParent"></div>
+            <div>
+                <ui-gmap-google-map center="map.center"
+                                    zoom="map.zoom"
+                                    dragging="map.dragging"
+                                    bounds="map.bounds"
+                                    events="map.events"
+                                    options="map.options"
+                                    pan="true"
+                                    control="map.control">
+                    <!--to add as a map control -->
+                    <ui-gmap-search-box options="searchbox.options" template="searchbox.template"
+                                        events="searchbox.events" position="searchbox.position"></ui-gmap-search-box>
+                    <!--to add to a parent div-->
+                    <!-- <ui-gmap-search-box options="searchbox.options" template="searchbox.template" events="searchbox.events" parentdiv="searchbox.parentdiv"></ui-gmap-search-box> -->
+
+                    <ui-gmap-markers idkey="map.idkey" models="map.markers" coords="'self'" icon="'icon'"
+                                     click="'onClicked'"></ui-gmap-markers>
+                    <ui-gmap-window show="window.show" coords="window.coords" idkey="window.place_id" templateurl="window.templateurl"
+                                    templateparameter="window.templateparameter" options="window.options"
+                                    closeclick='window.closeClick()' ng-cloak>
+                    </ui-gmap-window>
+
+                </ui-gmap-google-map>
+                <!--<button type="button" ng-click="toggleMap()">Toggle Visibility</button>
+                <span ng-bind="searchbox.options.visible"></span>-->
+            </div>
+        </div>
+        <div class="col-xs-6 col-md-4">
+            <div class="col-md-6">
+                <h3> Search History </h3>
+            </div>
+            <div class="col-md-6">
+                <button type="button" ng-click="ResetHistory()" class="btn btn-default" style="margin-top: 10%;">Reset History</button>
+            </div>
+            <div class="clearfix visible-xs-block"></div>
+            <table class="table table-condensed" style="width: 80%;">
+                <tr ng-repeat="SH in SearchHistory" title="{{SH[0].name}}, lat: {{SH[0].latitude}}, lon: {{SH[0].longitude}}" ng-click="MapMe(SH);">
+                    <td>
+                        <small>{{SH[0].templateparameter.formatted_address}}</small>
+                    </td>
+                </tr>
+                <tr ng-if="SearchHistory.length == 0" class="state-empty">
+                    <td style="text-align:center;"><span>Nothing to show here</span><br /><br /><br /><small>No Search History Found </small></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.1/lodash.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
+    <script src="http://cdn.rawgit.com/nmccready/angular-simple-logger/0.0.1/dist/index.js"></script>
+    <script src="angular-google-maps.js"></script>
+    <script src="search-box.js"></script>
+</body>
+</html>
